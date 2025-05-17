@@ -12,3 +12,13 @@ uv sync --all-groups
 uv add `パッケージ名`
 uv export --no-annotate --no-hashes --no-header -o requirements.txt
 ```
+
+## Documentation
+```bash
+sphinx-autobuild ./docs/source ./docs/build/html
+```
+
+(manual)
+```bash
+sphinx-apidoc -f -o ./docs/source ./test_sphinx
+```

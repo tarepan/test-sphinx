@@ -1,0 +1,43 @@
+name: Sphinx Document Generation
+
+on: [push,]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: <Setup> Checkout repository
+        uses: actions/checkout@v4
+
+      - name: <Setup> Prepare Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11" 
+
+      - name: <Setup> Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: <Build> Build document with Sphinx
+        run: |
+          cd docs
+          poetry run make dirhtml
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Upload entire repository
+          path: './docs/_build/dirhtml/'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
